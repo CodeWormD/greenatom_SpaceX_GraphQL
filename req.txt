@@ -2,7 +2,6 @@ alembic==1.8.1
 anyio==3.6.2
 certifi==2022.12.7
 charset-normalizer==3.0.1
-fastapi==0.83.0
 greenlet==2.0.2
 idna==3.4
 isort==5.10.1

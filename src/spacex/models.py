@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Text, ForeignKey, Integer, String, Date
+from sqlalchemy import Column, Date, ForeignKey, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -22,7 +22,7 @@ class Rocket(Base):
     first_flight = Column(String(15), nullable=False)
     description = Column(Text, nullable=False)
 
-    launches = relationship('Launch', back_populates = 'rocket')
+    # launches = relationship('Launch', back_populates = 'rocket')
 
 
 class Launch(Base):
@@ -32,6 +32,4 @@ class Launch(Base):
     id = Column(Integer, primary_key=True, index=True, unique=True)
     mission_name = Column(String, unique=True, nullable=False)
 
-    rockets = relationship('Rocket', back_populates = 'launch', lazy='select')
-
-
+    # rockets = relationship('Rocket', back_populates = 'launch', lazy='select')
