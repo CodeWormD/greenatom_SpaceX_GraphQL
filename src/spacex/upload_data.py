@@ -1,15 +1,13 @@
-from get_query_data import rockets_data, launches_data
-from models import Rocket, Launch
 from sqlalchemy import create_engine
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
+from get_query_data import launches_data, rockets_data
+from models import Launch, Rocket
+from data_crud import Data_post
 
 SQLALCHEMY_DATABASE_URL = "postgresql://postgres:1@localhost/spacex"
 
-
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
-
 
 Session = sessionmaker(
     autocommit=False,
@@ -18,51 +16,53 @@ Session = sessionmaker(
 
 
 def insert_rockets(db: Session):
+    """Добавляем спарсенные данные в бд(ракеты)"""
 
     data = rockets_data().json()['data']['rockets']
+    object = Data_post(db, Rocket)
 
     for i in range(len(data)):
-        rocket = Rocket(
+        object.add_to_base(
             name=data[i]['name'],
             first_flight=data[i]['first_flight'],
             description=data[i]['description']
         )
 
-        db.add(rocket)
-        db.commit()
-        db.refresh(rocket)
-
-
 
 def insert_launches(db: Session):
+    """Добавляем спарсенные данные в бд(запуски)"""
 
     data = launches_data().json()['data']['launches']
+    object = Data_post(db, Launch)
+
     for i in range(len(data)):
-        rocket = Launch(
+        object.add_to_base(
             mission_name=data[i]['mission_name']
         )
 
-        db.add(rocket)
-        db.commit()
-        db.refresh(rocket)
-
-
 
 def count_rockets(db: Session):
+    """Считаем кол-во ракет"""
+
     return db.query(Rocket).count()
 
 
 def count_launches(db: Session):
+    """Считаем кол-во запусков"""
+
     return db.query(Launch).count()
 
 
 def check_db(db: Session):
-    if count_rockets(Session()) == 0 and count_launches(Session()) == 0:
-        insert_rockets(Session())
-        insert_launches(Session())
+    """Если база пустая - вызываем скрипт добавления объектов в базу,
+    если объекты в базе есть - выводим их кол-во"""
 
-    print(f'\nTotal rockets: {count_rockets(Session())}\n'
-          f'Total launches: {count_launches(Session())}\n')
+    if count_rockets(db) == 0 and count_launches(db) == 0:
+        insert_rockets(db)
+        insert_launches(db)
+
+    print(f'\nTotal rockets: {count_rockets(db)}\n'
+          f'Total launches: {count_launches(db)}\n')
 
 
 if __name__ == '__main__':
