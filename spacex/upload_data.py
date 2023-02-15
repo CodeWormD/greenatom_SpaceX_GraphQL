@@ -5,10 +5,11 @@ from get_query_data import launches_data, rockets_data
 from models import Launch, Rocket
 from data_crud import Data_post
 
+
 # for docker
 # SQLALCHEMY_DATABASE_URL = "postgresql://postgres:1@postgres:5432/spacex"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:1@localhost/spacex"
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:1@localhost:5432/spacex"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 
