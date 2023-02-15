@@ -4,7 +4,9 @@ from time import sleep
 
 x = subprocess.Popen(['python', '-m', 'venv', 'venv'])
 x.wait()
-x = subprocess.Popen(['pip', 'install', '--upgrade', 'pip'])
+x = subprocess.Popen([sys.executable, 'source venv/Scripts/activate'])
+x.wait()
+x = subprocess.Popen([sys.executable, 'python.exe -m pip install --upgrade pip'])
 x.wait()
 x = subprocess.Popen(['pip', 'install', '-r', 'req.txt'])
 x.wait()
