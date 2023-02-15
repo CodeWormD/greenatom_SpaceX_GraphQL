@@ -1,0 +1,33 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:14.5-alpine
+    volumes:
+      - postgres:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - default_net
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1
+      POSTGRES_DB: spacex
+
+  upload_data:
+    build: ./
+    volumes:
+      - .:/src/
+    links:
+      - postgres
+    # command: bash -c "python spacex/upload_data.py"
+    depends_on:
+      - postgres
+
+networks:
+    default_net:
+
+volumes:
+  postgres:
